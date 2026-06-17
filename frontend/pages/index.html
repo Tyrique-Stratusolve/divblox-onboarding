@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task 1 - Add All</title>
+    <title>Task 2 - Fibonacci Sequence</title>
     <style>
         * {
             margin: 0;
@@ -123,34 +123,26 @@
 
 <body>
     <div class="container">
-        <h1>Task 1 — Add All</h1>
-
-        <div class="array-badge" id="arrayDisplay">[ ]</div>
+        <h1>Task 2 — Fibonacci Sequence</h1>
+        
+        <div class="array-badge">
+            <input type="text" id="fibInputField">
+        </div>
 
         <div class="results-grid" id="resultsGrid">
             <div class="result-card">
-                <div class="label">Recursive</div>
-                <div class="value" id="resultRecursive">—</div>
-                <div class="desc">shift + reduce + recursion</div>
+                <div class="label">nearest Fibonacci Sequence</div>
+                <div class="value" id="nearestFibonacci">—</div>
+                <div class="desc">Count upto the nearest (n) of the Fibonacci Sequence</div>
             </div>
             <div class="result-card">
-                <div class="label">For Loop</div>
-                <div class="value" id="resultForLoop">—</div>
-                <div class="desc">slice(i) + reduce</div>
-            </div>
-            <div class="result-card">
-                <div class="label">While Shift</div>
-                <div class="value" id="resultShift">—</div>
-                <div class="desc">reduce + shift</div>
-            </div>
-            <div class="result-card">
-                <div class="label">While Pop</div>
-                <div class="value" id="resultPop">—</div>
-                <div class="desc">reduce + pop</div>
+                <div class="label">Generate Fibonacci Sequence</Search></div>
+                <div class="value" id="generateFibonacci">—</div>
+                <div class="desc">Generate the first (n) terms of the Fibonacci Sequence</div>
             </div>
         </div>
 
-        <button id="actionBtn">▶ Run All</button>
+        <button id="actionBtn">▶ Do Fibonacci</button>
         <p class="error" id="errorDisplay"></p>
     </div>
 

@@ -1,7 +1,8 @@
+const input = document.getElementById("fibInputField");
 const button = document.getElementById("actionBtn");
-const arrayDisplay = document.getElementById("arrayDisplay");
-const resultRecursive = document.getElementById("resultRecursive");
-const resultForLoop = document.getElementById("resultForLoop");
+
+const nearestFibonacci = document.getElementById("nearestFibonacci");
+const generateFibonacci = document.getElementById("generateFibonacci");
 const resultShift = document.getElementById("resultShift");
 const resultPop = document.getElementById("resultPop");
 const errorDisplay = document.getElementById("errorDisplay");
@@ -12,17 +13,24 @@ function setResult(id, value) {
 }
 
 button.addEventListener("click", async () => {
+    let inputValue = input.value;
+
     errorDisplay.textContent = "";
     try {
-        const response = await fetch("http://localhost:3000/api/data");
+        const response = await fetch("http://localhost:3000/api/data", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fibNum: inputValue
+            })
+        });
+
         const data = await response.json();
 
-        arrayDisplay.textContent = JSON.stringify(data.array);
-
-        setResult("resultRecursive", data.results.recursive);
-        setResult("resultForLoop", data.results.forLoop);
-        setResult("resultShift", data.results.shift);
-        setResult("resultPop", data.results.pop);
+        setResult("nearestFibonacci", data.results.nearestFibonacci);
+        setResult("generateFibonacci", data.results.generateFibonacci);
     } catch (error) {
         console.error("Error fetching data:", error);
         errorDisplay.textContent = "Failed to connect to Node.js server. Make sure it's running on port 3000.";
