@@ -1,5 +1,5 @@
-import express from "express";
-import cors from "cors";
+import express from 'express';
+import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
@@ -19,7 +19,7 @@ function addAll(array) {
 
 function addAllForLoop(array) {
     let grandTotal = 0;
-
+    
     for (let i = 0; i < array.length; i++) {
         let sum = 0;
         sum = array.slice(i).reduce((accumulator, current) => accumulator + current, 0);
@@ -53,28 +53,11 @@ function addAllPop(array) {
     return grandTotal;
 }
 
-function getSteps(array) {
-    const steps = [];
-    const working = [...array];
-
-    while (working.length > 0) {
-        const currentSum = working.reduce((a, b) => a + b, 0);
-        steps.push({
-            remaining: [...working],
-            sum: currentSum,
-        });
-        working.shift();
-    }
-
-    return steps;
-}
-
 app.get("/api/data", (request, response) => {
     const array = [1, 1, 1, 1, 1];
 
     const dataFromNode = {
         array: array,
-        steps: getSteps(array),
         results: {
             recursive: addAll([...array]),
             forLoop: addAllForLoop([...array]),
@@ -86,4 +69,4 @@ app.get("/api/data", (request, response) => {
     response.json(dataFromNode);
 });
 
-app.listen(PORT, () => console.log());
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
