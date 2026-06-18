@@ -1,10 +1,7 @@
-const input = document.getElementById("fibInputField");
+const input = document.getElementById("palindromeInputField");
 const button = document.getElementById("actionBtn");
+const displayPalindrome = document.getElementById("displayPalindrome");
 
-const nearestFibonacci = document.getElementById("nearestFibonacci");
-const generateFibonacci = document.getElementById("generateFibonacci");
-const resultShift = document.getElementById("resultShift");
-const resultPop = document.getElementById("resultPop");
 const errorDisplay = document.getElementById("errorDisplay");
 
 function setResult(id, value) {
@@ -23,7 +20,7 @@ button.addEventListener("click", async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                fibNum: inputValue
+                palindromeStr: inputValue
             })
         });
 

@@ -32,7 +32,7 @@ function generateFibonacci(numTerms, initalNumVal = 0, secondNumVal = 1, fibArr 
 }
 
 app.post("/api/data", (request, response) => {
-    let fibNum = parseInt(request.body.fibNum);
+    let palindromeStr = request.body.palindromeStr;
 
     const dataFromNode = {
         results: {
