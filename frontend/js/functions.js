@@ -1,6 +1,5 @@
 const input = document.getElementById("palindromeInputField");
 const button = document.getElementById("actionBtn");
-const displayPalindrome = document.getElementById("displayPalindrome");
 
 const errorDisplay = document.getElementById("errorDisplay");
 
@@ -26,8 +25,7 @@ button.addEventListener("click", async () => {
 
         const data = await response.json();
 
-        setResult("nearestFibonacci", data.results.nearestFibonacci);
-        setResult("generateFibonacci", data.results.generateFibonacci);
+        setResult("displayPalindrome", data.results.isPalindrome);
     } catch (error) {
         console.error("Error fetching data:", error);
         errorDisplay.textContent = "Failed to connect to Node.js server. Make sure it's running on port 3000.";
