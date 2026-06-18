@@ -3,8 +3,7 @@ const button = document.getElementById("actionBtn");
 
 const nearestFibonacci = document.getElementById("nearestFibonacci");
 const generateFibonacci = document.getElementById("generateFibonacci");
-const resultShift = document.getElementById("resultShift");
-const resultPop = document.getElementById("resultPop");
+
 const errorDisplay = document.getElementById("errorDisplay");
 
 function setResult(id, value) {
