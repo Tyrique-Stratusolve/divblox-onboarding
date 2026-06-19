@@ -125,20 +125,24 @@
 
 <body>
     <div class="container">
-        <h1>Task 3 — Palindrome</h1>
+        <h1>Task 4 — groupByOwner</h1>
         
         <div class="array-badge">
-            <input type="text" id="palindromeInputField">
+            <select bame="owners" id="ownersDropdown">
+                <option value="Andy">Andy</option>
+                <option value="Bob">Bob</option>
+                <option value="Candice">Candice</option>
+            </select>
         </div>
 
         <div class="results-grid" id="resultsGrid">
             <div class="result-card">
-                <div class="label">Is this a Palindrome</div>
-                <div class="value" id="displayPalindrome">—</div>
+                <div class="label">equipment owned:</div>
+                <div class="value" id="displayEquipment">—</div>
             </div>
         </div>
 
-        <button id="actionBtn">▶ Is Palindrome?</button>
+        <button id="actionBtn">▶ Show equipment</button>
         <p class="error" id="errorDisplay"></p>
     </div>
 

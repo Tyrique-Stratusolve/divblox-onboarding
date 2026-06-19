@@ -1,4 +1,4 @@
-const input = document.getElementById("palindromeInputField");
+const input = document.getElementById("ownersDropdown");
 const button = document.getElementById("actionBtn");
 
 const errorDisplay = document.getElementById("errorDisplay");
@@ -19,13 +19,13 @@ button.addEventListener("click", async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                palindromeStr: inputValue
+                ownerKey: inputValue
             })
         });
 
         const data = await response.json();
 
-        setResult("displayPalindrome", data.results.isPalindrome);
+        setResult("displayEquipment", data.results.equipmentObj);
     } catch (error) {
         console.error("Error fetching data:", error);
         errorDisplay.textContent = "Failed to connect to Node.js server. Make sure it's running on port 3000.";

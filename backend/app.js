@@ -7,17 +7,17 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-function isPalindrome(palindromeStr) {
-    const cleanPalindromeStr = palindromeStr.toLowerCase().replace(/[^a-z0-9]/g,'');
-    return cleanPalindromeStr === cleanPalindromeStr.split('').reverse().join('');
+function groupByOwner(ownerKey) {
+    console.log(ownerKey);
+    return ownerKey;
 }
 
 app.post("/api/data", (request, response) => {
-    let palindromeStr = request.body.palindromeStr;
+    let ownerKey = request.body.ownerKey;
 
     const dataFromNode = {
         results: {
-            isPalindrome: isPalindrome(palindromeStr),
+            equipmentObj: groupByOwner(ownerKey),
         },
     };
 
