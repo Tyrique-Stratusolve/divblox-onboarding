@@ -25,7 +25,8 @@ button.addEventListener("click", async () => {
 
         const data = await response.json();
 
-        setResult("displayEquipment", data.results.equipmentObj);
+        const items = Object.keys(data.results.equipmentObj);
+        setResult("displayEquipment", items.join(", "));
     } catch (error) {
         console.error("Error fetching data:", error);
         errorDisplay.textContent = "Failed to connect to Node.js server. Make sure it's running on port 3000.";
