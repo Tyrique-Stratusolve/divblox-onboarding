@@ -45,10 +45,7 @@ const server = http.createServer(async (request, response) => {
 
         if (method === "POST" && path === "/people") {
             const body = await getBody(request);
-            const age = Math.floor(
-                (Date.now() - new Date(body.dateOfBirth).getTime()) /
-                    (365.25 * 24 * 60 * 60 * 1000)
-            );
+            const age = Person.calculateAge(body.dateOfBirth);
             const result = await person.createPerson(
                 body.firstName,
                 body.lastName,
@@ -62,10 +59,7 @@ const server = http.createServer(async (request, response) => {
         const matchPatch = path.match(/^\/people\/(\d+)$/);
         if (method === "PATCH" && matchPatch) {
             const body = await getBody(request);
-            const age = Math.floor(
-                (Date.now() - new Date(body.dateOfBirth).getTime()) /
-                    (365.25 * 24 * 60 * 60 * 1000)
-            );
+            const age = Person.calculateAge(body.dateOfBirth);
             const result = await person.updatePerson(
                 Number(matchPatch[1]),
                 body.firstName,
@@ -90,8 +84,8 @@ const server = http.createServer(async (request, response) => {
 
         send(response, 404, { error: "Route not found" });
 
-    } catch (err) {
-        const message = err.message;
+    } catch (error) {
+        const message = error.message;
 
         if (message.includes("not found")) {
             return send(response, 404, { error: message });
@@ -105,7 +99,7 @@ const server = http.createServer(async (request, response) => {
             return send(response, 400, { error: message });
         }
 
-        console.error("Unhandled error:", err);
+        console.error("Unhandled error:", error);
         send(response, 500, { error: "Internal server error" });
     }
 });

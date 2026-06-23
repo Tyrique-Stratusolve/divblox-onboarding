@@ -1,6 +1,19 @@
 import { query } from "../database/db.js";
 
 class Person {
+    static calculateAge(dateOfBirth) {
+        const currentDate = new Date();
+        const birthDate = new Date(dateOfBirth);
+        const yearsOld = currentDate.getFullYear() - birthDate.getFullYear();
+        const monthsDiff = currentDate.getMonth() - birthDate.getMonth();
+        const daysDiff = currentDate.getDate() - birthDate.getDate();
+
+        if (monthsDiff < 0 || (monthsDiff === 0 && daysDiff < 0)) {
+            return yearsOld - 1;
+        }
+        return yearsOld;
+    }
+
     async createPerson(firstName, lastName, dateOfBirth, emailAddress, age) {
         if (!firstName || !lastName || !dateOfBirth || !emailAddress) {
             throw new Error("All fields are required");
