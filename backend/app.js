@@ -73,13 +73,15 @@ const server = http.createServer(async (request, response) => {
 
         const matchDelete = path.match(/^\/people\/(\d+)$/);
         if (method === "DELETE" && matchDelete) {
-            const result = await person.deletePerson(Number(matchDelete[1]));
-            return send(response, 200, result);
+            await person.deletePerson(Number(matchDelete[1]));
+            response.writeHead(204);
+            return response.end();
         }
 
         if (method === "DELETE" && path === "/people") {
-            const result = await person.deleteAllPeople();
-            return send(response, 200, result);
+            await person.deleteAllPeople();
+            response.writeHead(204);
+            return response.end();
         }
 
         send(response, 404, { error: "Route not found" });

@@ -33,7 +33,7 @@ class Person {
             }
             throw err;
         }
-        return { success: true, message: `User created with ID: ${result.insertId}`, id: result.insertId };
+        return { id: result.insertId, firstName, lastName, dateOfBirth, emailAddress, age };
     }
 
     async loadPerson(personId) {
@@ -67,7 +67,7 @@ class Person {
         if (!existingUser) throw new Error(`Person with ID ${personId} not found`);
 
         await query("DELETE FROM Person WHERE Id = ?", [personId]);
-        return { success: true, message: `Person deleted with ID: ${personId}` };
+        return { message: `Person deleted with ID: ${personId}` };
     }
 
     async loadAllPeople() {
@@ -76,7 +76,7 @@ class Person {
 
     async deleteAllPeople() {
         const result = await query("DELETE FROM Person");
-        return { success: true, message: "All people deleted", deleted: result.affectedRows };
+        return { message: "All people deleted", deleted: result.affectedRows };
     }
 }
 
