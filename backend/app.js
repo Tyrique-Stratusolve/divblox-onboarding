@@ -5,9 +5,8 @@ import Person from "./models/person.js";
 const person = new Person();
 
 function send(response, status, data) {
-    response.writeHead(status, {
-        "Content-Type": "application/json",
-    });
+    response.statusCode = status;
+    response.setHeader("Content-Type", "application/json");
     response.end(JSON.stringify(data));
 }
 
@@ -74,13 +73,13 @@ const server = http.createServer(async (request, response) => {
         const matchDelete = path.match(/^\/people\/(\d+)$/);
         if (method === "DELETE" && matchDelete) {
             await person.deletePerson(Number(matchDelete[1]));
-            response.writeHead(204);
+            response.statusCode = 204;
             return response.end();
         }
 
         if (method === "DELETE" && path === "/people") {
             await person.deleteAllPeople();
-            response.writeHead(204);
+            response.statusCode = 204;
             return response.end();
         }
 

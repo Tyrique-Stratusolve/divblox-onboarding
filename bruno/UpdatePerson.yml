@@ -5,15 +5,15 @@ info:
 
 http:
   method: PATCH
-  url: http://localhost:3000/people/1
+  url: http://localhost:3000/people/2
   body:
     type: json
     data: |-
       {
-        firstName: Tyrique,
-        lastName: De Bruin Updated,
-        dateOfBirth: 2001-05-10,
-        emailAddress: tyrique.updated@gmail.com
+        "firstName": "Tyrique",
+        "lastName": "De Bruin Updated",
+        "dateOfBirth": "2001-05-10",
+        "emailAddress": "tyrique.updated@gmail.com"
       }
   auth: inherit
 
