@@ -1,8 +1,8 @@
-import { query } from "./database/db.js";
+import { query } from "../database/db.js";
 
 class Person {
-    async createPerson(firstName, surname, dateOfBirth, emailAddress, age) {
-        if (!firstName || !surname || !dateOfBirth || !emailAddress) {
+    async createPerson(firstName, lastName, dateOfBirth, emailAddress, age) {
+        if (!firstName || !lastName || !dateOfBirth || !emailAddress) {
             throw new Error("All fields are required");
         }
 
@@ -10,8 +10,16 @@ class Person {
             throw new Error("Age must be between 0 and 150");
         }
 
-        const sql = "INSERT INTO Person (FirstName, Surname, DateOfBirth, EmailAddress, Age) VALUES (?, ?, ?, ?, ?)";
-        const result = await query(sql, [firstName, surname, dateOfBirth, emailAddress, age]);
+        const sql = "INSERT INTO Person (FirstName, LastName, DateOfBirth, EmailAddress, Age) VALUES (?, ?, ?, ?, ?)";
+        let result;
+        try {
+            result = await query(sql, [firstName, lastName, dateOfBirth, emailAddress, age]);
+        } catch (err) {
+            if (err.code === 'ER_DUP_ENTRY') {
+                throw new Error("A person with this email address already exists");
+            }
+            throw err;
+        }
         return { success: true, message: `User created with ID: ${result.insertId}`, id: result.insertId };
     }
 
@@ -24,15 +32,15 @@ class Person {
         return rows[0];
     }
 
-    async updatePerson(personId, firstName, surname, dateOfBirth, emailAddress, age) {
+    async updatePerson(personId, firstName, lastName, dateOfBirth, emailAddress, age) {
         if (!personId || personId < 1) throw new Error("Invalid person ID");
 
         const existingUser = await this.loadPerson(personId).catch(() => null);
 
         if (!existingUser) throw new Error(`Person with ID ${personId} not found`);
         
-        const sql = "UPDATE Person SET FirstName = ?, Surname = ?, DateOfBirth = ?, EmailAddress = ?, Age = ? WHERE Id = ?";
-        await query(sql, [firstName, surname, dateOfBirth, emailAddress, age, personId]);
+        const sql = "UPDATE Person SET FirstName = ?, LastName = ?, DateOfBirth = ?, EmailAddress = ?, Age = ? WHERE Id = ?";
+        await query(sql, [firstName, lastName, dateOfBirth, emailAddress, age, personId]);
         
         const rows = await this.loadPerson(personId);
         return rows;

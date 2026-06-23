@@ -1,13 +1,12 @@
 import http from "http";
 import { URL } from "url";
-import Person from "./models/person";
+import Person from "./models/person.js";
 
 const person = new Person();
 
 function send(response, status, data) {
     response.writeHead(status, {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
     });
     response.end(JSON.stringify(data));
 }
@@ -52,7 +51,7 @@ const server = http.createServer(async (request, response) => {
             );
             const result = await person.createPerson(
                 body.firstName,
-                body.surname,
+                body.lastName,
                 body.dateOfBirth,
                 body.emailAddress,
                 age
@@ -70,7 +69,7 @@ const server = http.createServer(async (request, response) => {
             const result = await person.updatePerson(
                 Number(matchPatch[1]),
                 body.firstName,
-                body.surname,
+                body.lastName,
                 body.dateOfBirth,
                 body.emailAddress,
                 age
