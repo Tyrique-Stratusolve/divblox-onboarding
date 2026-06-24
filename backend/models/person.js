@@ -27,11 +27,11 @@ class Person {
         let result;
         try {
             result = await query(sql, [firstName, lastName, dateOfBirth, emailAddress, age]);
-        } catch (err) {
-            if (err.code === 'ER_DUP_ENTRY') {
+        } catch (error) {
+            if (error.code === 'ER_DUP_ENTRY') {
                 throw new Error("A person with this email address already exists");
             }
-            throw err;
+            throw error;
         }
         return { id: result.insertId, firstName, lastName, dateOfBirth, emailAddress, age };
     }
