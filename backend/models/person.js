@@ -1,6 +1,6 @@
 import { query } from "../database/db.js";
 
-class Person {
+export class Person {
     static calculateAge(dateOfBirth) {
         const currentDate = new Date();
         const birthDate = new Date(dateOfBirth);
@@ -48,13 +48,13 @@ class Person {
     async updatePerson(personId, firstName, lastName, dateOfBirth, emailAddress, age) {
         if (!personId || personId < 1) throw new Error("Invalid person ID");
 
-        const existingUser = await this.loadPerson(personId).catch(() => null);
+        const existingUser = await this.loadPerson(personId);
 
         if (!existingUser) throw new Error(`Person with ID ${personId} not found`);
-        
+
         const sql = "UPDATE Person SET FirstName = ?, LastName = ?, DateOfBirth = ?, EmailAddress = ?, Age = ? WHERE Id = ?";
-        await query(sql, [firstName, lastName, dateOfBirth, emailAddress, age, personId]);
-        
+        const rows = await query(sql, [firstName, lastName, dateOfBirth, emailAddress, age, personId]);
+
         const rows = await this.loadPerson(personId);
         return rows;
     }
@@ -62,7 +62,7 @@ class Person {
     async deletePerson(personId) {
         if (!personId || personId < 1) throw new Error("Invalid person ID");
 
-        const existingUser = await this.loadPerson(personId).catch(() => null);
+        const existingUser = await this.loadPerson(personId);
 
         if (!existingUser) throw new Error(`Person with ID ${personId} not found`);
 
@@ -79,5 +79,3 @@ class Person {
         return { message: "All people deleted", deleted: result.affectedRows };
     }
 }
-
-export default Person;

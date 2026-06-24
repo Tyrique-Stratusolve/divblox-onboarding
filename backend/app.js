@@ -1,6 +1,6 @@
 import http from "http";
 import { URL } from "url";
-import Person from "./models/person.js";
+import { Person } from "./models/person.js";
 
 const person = new Person();
 
@@ -67,7 +67,7 @@ const server = http.createServer(async (request, response) => {
                 body.emailAddress,
                 age
             );
-            return send(response, 200, result);
+            return send(response, 203, result);
         }
 
         const matchDelete = path.match(/^\/people\/(\d+)$/);

@@ -5,7 +5,7 @@ info:
 
 http:
   method: PATCH
-  url: http://localhost:3000/people/2
+  url: http://localhost:3000/people/260
   body:
     type: json
     data: |-
