@@ -33,7 +33,5 @@
     <button class="clear-btn" on:click={() => dispatch('clear')}>
       Clear completed
     </button>
-  {:else}
-    <span></span>
   {/if}
 </div>

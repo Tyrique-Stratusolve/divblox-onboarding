@@ -5,13 +5,13 @@
 
   const dispatch = createEventDispatcher();
 
-  /** @type {Array<{id: number, title: string, description: string, done: boolean}>} */
+  /** @type {Array<{title: string, description: string, done: boolean}>} */
   export let tasks = [];
 </script>
 
 {#if tasks.length > 0}
   <div class="todo-list">
-    {#each tasks as task (task.id)}
+    {#each tasks as task, index (index)}
       <div class="item-wrap" transition:fade={{ duration: 200 }}>
         <TodoItem
           {task}
