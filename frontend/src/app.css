@@ -340,18 +340,17 @@ code {
   border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
-  transition: border-color 0.15s;
+}
+
+.desc-input {
+  font-size: 13px;
+  padding: 8px 14px;
 }
 
 .title-input:focus,
 .desc-input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-bg);
-}
-
-.desc-input {
-  font-size: 13px;
-  padding: 8px 14px;
 }
 
 .add-btn {
@@ -406,7 +405,6 @@ code {
   border-radius: 6px;
   background: transparent;
   cursor: pointer;
-  transition: all 0.15s;
   color: var(--text);
 }
 
@@ -432,7 +430,7 @@ code {
 }
 
 .clear-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(255, 68, 68, 0.45);
 }
 
 .todo-list {
@@ -449,7 +447,7 @@ code {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  min-height: 32px;
 }
 
 .todo-item:hover {
@@ -477,8 +475,7 @@ code {
   background: transparent;
   cursor: pointer;
   margin-top: 1px;
-  transition: all 0.15s;
-  color: #fff;
+  color: #ffff;
   padding: 0;
 }
 
@@ -556,7 +553,7 @@ code {
 .edit-input,
 .edit-desc {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 13px;
   padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -570,10 +567,6 @@ code {
   box-shadow: 0 0 0 3px var(--accent-bg);
 }
 
-.edit-desc {
-  font-size: 13px;
-}
-
 .edit-actions {
   display: flex;
   gap: 6px;
@@ -583,7 +576,6 @@ code {
 .cancel-btn {
   font-family: var(--sans);
   font-size: 13px;
-  padding: 6px 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -591,7 +583,7 @@ code {
 
 .save-btn {
   background: var(--accent);
-  color: #fff;
+  color: #ffff;
 }
 
 .save-btn:hover:not(:disabled) {

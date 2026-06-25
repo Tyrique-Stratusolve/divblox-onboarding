@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { Plus } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -39,9 +40,6 @@
     />
   </div>
   <button type="submit" class="add-btn" disabled={!title.trim()}>
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <line x1="12" y1="5" x2="12" y2="19"/>
-      <line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
+    <Plus size={20} strokeWidth={2.5} />
   </button>
 </form>

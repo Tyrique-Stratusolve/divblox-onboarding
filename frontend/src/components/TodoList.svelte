@@ -10,8 +10,8 @@
 
 {#if tasks.length > 0}
   <div class="todo-list">
-    {#each tasks as task, index (index)}
-      <div class="item-wrap">
+    {#each tasks as task}
+      <div>
         <TodoItem
           {task}
           on:toggle={event => dispatch('toggle', event.detail)}

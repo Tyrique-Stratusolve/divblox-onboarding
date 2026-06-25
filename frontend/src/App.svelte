@@ -1,4 +1,5 @@
 <script>
+  import { addTask, toggleTask, editTask, deleteTask, clearCompleted } from './lib/tasks.js';
   import TodoForm from './components/TodoForm.svelte';
   import TodoList from './components/TodoList.svelte';
   import TodoFilters from './components/TodoFilters.svelte';
@@ -16,29 +17,24 @@
   $: activeCount = tasks.filter(task => !task.done).length;
   $: doneCount = tasks.filter(task => task.done).length;
 
-  function addTask(title, desc) {
-    if (!title.trim()) return;
-    tasks = [...tasks, { title: title.trim(), description: desc.trim(), done: false }];
+  function handleAdd(event) {
+    tasks = addTask(tasks, event.detail.title, event.detail.description);
   }
 
-  function toggleTask(targetTask) {
-    tasks = tasks.map(task => task === targetTask ? { ...task, done: !task.done } : task);
+  function handleToggle(event) {
+    tasks = toggleTask(tasks, tasks.indexOf(event.detail));
   }
 
-  function editTask(targetTask, title, desc) {
-    tasks = tasks.map(
-      task => task === targetTask
-        ? { ...task, title: title.trim(), description: desc.trim() }
-        : task
-    );
+  function handleEdit(event) {
+    tasks = editTask(tasks, tasks.indexOf(event.detail.task), event.detail.title, event.detail.description);
   }
 
-  function deleteTask(targetTask) {
-    tasks = tasks.filter(task => task !== targetTask);
+  function handleDelete(event) {
+    tasks = deleteTask(tasks, tasks.indexOf(event.detail));
   }
 
-  function clearCompleted() {
-    tasks = tasks.filter(task => !task.done);
+  function handleClear() {
+    tasks = clearCompleted(tasks);
   }
 </script>
 
@@ -48,26 +44,20 @@
     <p class="subtitle">task manager</p>
   </header>
 
-  <TodoForm on:add={event => addTask(event.detail.title, event.detail.description)} />
+  <TodoForm on:add={handleAdd} />
 
-  {#if tasks.length > 0}
-    <TodoFilters
-      {filter}
-      {activeCount}
-      {doneCount}
-      on:change={event => filter = event.detail}
-      on:clear={clearCompleted}
-    />
+  <TodoFilters
+    {filter}
+    {activeCount}
+    {doneCount}
+    on:change={event => filter = event.detail}
+    on:clear={handleClear}
+  />
 
-    <TodoList
-      tasks={filteredTasks}
-      on:toggle={event => toggleTask(event.detail)}
-      on:edit={event => editTask(event.detail.task, event.detail.title, event.detail.description)}
-      on:delete={event => deleteTask(event.detail)}
-    />
-  {:else}
-    <div class="empty-state">
-      <p class="empty-text">No tasks yet. Add one above!</p>
-    </div>
-  {/if}
+  <TodoList
+    tasks={filteredTasks}
+    on:toggle={handleToggle}
+    on:edit={handleEdit}
+    on:delete={handleDelete}
+  />
 </div>
