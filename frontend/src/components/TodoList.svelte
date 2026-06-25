@@ -1,6 +1,5 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { fade } from 'svelte/transition';
   import TodoItem from './TodoItem.svelte';
 
   const dispatch = createEventDispatcher();
@@ -12,7 +11,7 @@
 {#if tasks.length > 0}
   <div class="todo-list">
     {#each tasks as task, index (index)}
-      <div class="item-wrap" transition:fade={{ duration: 200 }}>
+      <div class="item-wrap">
         <TodoItem
           {task}
           on:toggle={event => dispatch('toggle', event.detail)}
