@@ -24,7 +24,11 @@
      * Disable this if you'd like to use dynamic types.
      */
     "checkJs": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "paths": {
+      "$lib": ["./src/lib"],
+      "$lib/*": ["./src/lib/*"]
+    }
   },
   /**
    * Use global.d.ts instead of compilerOptions.types
