@@ -1,11 +1,8 @@
-import { findSession } from '../models/session.js';
+import { extractId, findSession } from '../models/session.js';
 
 export async function requireAuth(request, response, next) {
   try {
-    const sessionId = request.headers.cookie?.split(';')
-      .find(c => c.trim().startsWith('session_id='))
-      ?.split('=')[1]
-      ?.trim();
+    const sessionId = extractId(request);
 
     if (!sessionId) {
       return response.status(401).json({ error: 'Authentication required' });

@@ -1,29 +1,58 @@
 import { query } from '../database/db.js';
 
+function shapeTask(row) {
+  return {
+    id: row.id,
+    user_id: row.user_id,
+    title: row.title,
+    description: row.description,
+    done: row.done,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    category: row.category_id ? {
+      id: row.category_id,
+      name: row.category_name,
+      color: row.category_color,
+    } : null,
+  };
+}
+
 export async function findByUser(userId, categoryId = null) {
-  let sql = `SELECT * FROM task WHERE user_id = ?`;
+  let sql = `
+    SELECT t.*, c.id AS category_id, c.name AS category_name, c.color AS category_color
+    FROM task t
+    LEFT JOIN category c ON c.id = t.category_id
+    WHERE t.user_id = ?
+  `;
   const params = [userId];
 
   if (categoryId) {
-    sql += ` AND id IN (SELECT task_id FROM task_category WHERE category_id = ?)`;
+    sql += ` AND t.category_id = ?`;
     params.push(categoryId);
   }
 
-  sql += ` ORDER BY created_at DESC`;
-  return await query(sql, params);
+  sql += ` ORDER BY t.created_at DESC`;
+  const rows = await query(sql, params);
+  return rows.map(shapeTask);
 }
 
 export async function findById(taskId, userId) {
-  const rows = await query('SELECT * FROM task WHERE id = ? AND user_id = ?', [taskId, userId]);
-  return rows[0] || null;
+  const rows = await query(
+    `SELECT t.*, c.id AS category_id, c.name AS category_name, c.color AS category_color
+     FROM task t
+     LEFT JOIN category c ON c.id = t.category_id
+     WHERE t.id = ? AND t.user_id = ?`,
+    [taskId, userId]
+  );
+  return rows[0] ? shapeTask(rows[0]) : null;
 }
 
-export async function create(userId, title, description) {
+export async function create(userId, title, description, categoryId) {
   const result = await query(
-    'INSERT INTO task (user_id, title, description) VALUES (?, ?, ?)',
-    [userId, title, description]
+    'INSERT INTO task (user_id, title, description, category_id) VALUES (?, ?, ?, ?)',
+    [userId, title, description, categoryId || null]
   );
-  return { id: result.insertId, user_id: userId, title, description, done: 0 };
+  return await findById(result.insertId, userId);
 }
 
 export async function update(taskId, userId, fields) {
@@ -33,6 +62,7 @@ export async function update(taskId, userId, fields) {
   if (fields.title !== undefined) { sets.push('title = ?'); params.push(fields.title); }
   if (fields.description !== undefined) { sets.push('description = ?'); params.push(fields.description); }
   if (fields.done !== undefined) { sets.push('done = ?'); params.push(fields.done); }
+  if (fields.category_id !== undefined) { sets.push('category_id = ?'); params.push(fields.category_id || null); }
 
   if (sets.length === 0) return null;
 
@@ -47,24 +77,4 @@ export async function update(taskId, userId, fields) {
 
 export async function remove(taskId, userId) {
   await query('DELETE FROM task WHERE id = ? AND user_id = ?', [taskId, userId]);
-}
-
-export async function setCategories(taskId, categoryIds) {
-  await query('DELETE FROM task_category WHERE task_id = ?', [taskId]);
-  if (categoryIds && categoryIds.length > 0) {
-    const values = categoryIds.map(id => [taskId, id]);
-    await query(
-      'INSERT INTO task_category (task_id, category_id) VALUES ?',
-      [values]
-    );
-  }
-}
-
-export async function getCategories(taskId) {
-  return await query(
-    `SELECT c.* FROM task_category tc
-     JOIN category c ON c.id = tc.category_id
-     WHERE tc.task_id = ?`,
-    [taskId]
-  );
 }

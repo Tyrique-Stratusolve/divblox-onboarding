@@ -9,18 +9,18 @@ export async function findById(id) {
   return rows[0] || null;
 }
 
-export async function create(name, colour) {
+export async function create(name, color) {
   const result = await query(
-    'INSERT INTO category (name, colour) VALUES (?, ?)',
-    [name, colour || '#6366f1']
+    'INSERT INTO category (name, color) VALUES (?, ?)',
+    [name, color || '#6366f1']
   );
-  return { id: result.insertId, name, colour: colour || '#6366f1' };
+  return { id: result.insertId, name, color: color || '#6366f1' };
 }
 
-export async function update(id, name, colour) {
+export async function update(id, name, color) {
   await query(
-    'UPDATE category SET name = ?, colour = ? WHERE id = ?',
-    [name, colour, id]
+    'UPDATE category SET name = ?, color = ? WHERE id = ?',
+    [name, color, id]
   );
   return await findById(id);
 }

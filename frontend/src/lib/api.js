@@ -41,10 +41,10 @@ export function fetchTasks(categoryId = null) {
   return request(`/tasks${query}`);
 }
 
-export function createTask(title, description, categoryIds = []) {
+export function createTask(title, description, categoryId) {
   return request('/tasks', {
     method: 'POST',
-    body: JSON.stringify({ title, description, category_ids: categoryIds }),
+    body: JSON.stringify({ title, description, category_id: categoryId || null }),
   });
 }
 
@@ -63,17 +63,17 @@ export function fetchCategories() {
   return request('/categories');
 }
 
-export function createCategory(name, colour) {
+export function createCategory(name, color) {
   return request('/categories', {
     method: 'POST',
-    body: JSON.stringify({ name, colour }),
+    body: JSON.stringify({ name, color }),
   });
 }
 
-export function updateCategory(id, name, colour) {
+export function updateCategory(id, name, color) {
   return request(`/categories/${id}`, {
     method: 'PATCH',
-    body: JSON.stringify({ name, colour }),
+    body: JSON.stringify({ name, color }),
   });
 }
 

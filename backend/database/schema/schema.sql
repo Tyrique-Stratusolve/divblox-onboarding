@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 CREATE TABLE IF NOT EXISTS `category` (
   `id`         INT          NOT NULL AUTO_INCREMENT,
   `name`       VARCHAR(100) NOT NULL,
-  `colour`     VARCHAR(255) NOT NULL DEFAULT '#6366f1',
+  `color`      VARCHAR(255) NOT NULL DEFAULT '#6366f1',
   `created_at` TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -50,18 +50,11 @@ CREATE TABLE IF NOT EXISTS `task` (
   `user_id`     INT          NOT NULL,
   `title`       VARCHAR(255) NOT NULL,
   `description` TEXT         NULL,
+  `category_id` INT          NULL,
   `done`        TINYINT(1)   NOT NULL DEFAULT 0,
   `created_at`  TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at`  TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_task_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS `task_category` (
-  `task_id`     INT NOT NULL,
-  `category_id` INT NOT NULL,
-  `created_at`  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`task_id`, `category_id`),
-  CONSTRAINT `fk_tc_task`     FOREIGN KEY (`task_id`)     REFERENCES `task`     (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_tc_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_task_user`     FOREIGN KEY (`user_id`)     REFERENCES `user`     (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_task_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

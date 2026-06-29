@@ -17,12 +17,12 @@ router.get('/', async (request, response) => {
 
 router.post('/', requireAuth, requireAdmin, async (request, response) => {
   try {
-    const { name, colour } = request.body;
+    const { name, color } = request.body;
     if (!name || !name.trim()) {
       return response.status(400).json({ error: 'Name is required' });
     }
 
-    const category = await Category.create(name.trim(), colour);
+    const category = await Category.create(name.trim(), color);
     response.status(201).json(category);
   } catch (error) {
     console.error('Create category error:', error);
@@ -38,12 +38,12 @@ router.patch('/:id', requireAuth, requireAdmin, async (request, response) => {
       return response.status(404).json({ error: 'Category not found' });
     }
 
-    const { name, colour } = request.body;
+    const { name, color } = request.body;
     if (!name || !name.trim()) {
       return response.status(400).json({ error: 'Name is required' });
     }
 
-    const category = await Category.update(categoryId, name.trim(), colour);
+    const category = await Category.update(categoryId, name.trim(), color);
     response.json(category);
   } catch (error) {
     console.error('Update category error:', error);

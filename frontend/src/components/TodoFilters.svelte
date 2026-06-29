@@ -12,49 +12,50 @@
   const filterOptions = [
     { key: 'all', label: 'All' },
     { key: 'active', label: 'Active' },
-    { key: 'completed', label: 'Completed' }
+    { key: 'completed', label: 'Completed' },
   ];
 </script>
 
-<div class="filters">
-  <span class="count">{activeCount} {activeCount === 1 ? 'item' : 'items'} left</span>
+<div class="flex items-center justify-between px-1 pb-3 gap-2 flex-wrap">
+  <span class="text-[13px] text-[var(--text)]">
+    {activeCount} {activeCount === 1 ? 'item' : 'items'} left
+  </span>
 
-  <div class="filter-btns">
-    {#each filterOptions as filterOption}
+  <div class="flex gap-1">
+    {#each filterOptions as option}
       <button
-        class="filter-btn"
-        class:active={filter === filterOption.key}
-        on:click={() => dispatch('change', filterOption.key)}
+        class="font-[var(--sans)] text-[13px] py-1.5 px-3 border rounded-md bg-transparent cursor-pointer transition-all text-[var(--text)] hover:bg-[var(--code-bg)]"
+        class:border-transparent={filter !== option.key}
+        class:border-[var(--accent)]={filter === option.key}
+        class:bg-[var(--accent-bg)]={filter === option.key}
+        class:font-medium={filter === option.key}
+        on:click={() => dispatch('change', option.key)}
       >
-        {filterOption.label}
+        {option.label}
       </button>
     {/each}
   </div>
 
   {#if categories.length > 0}
-    <select class="cat-select" on:change={event => dispatch('categoryFilter', event.target.value || null)}>
+    <select
+      on:change={event => dispatch('categoryFilter', event.target.value ? Number(event.target.value) : null)}
+      class="font-[var(--sans)] text-[13px] py-1.5 px-2.5 border border-[var(--border)] rounded-md bg-[var(--bg)] text-[var(--text)] cursor-pointer"
+    >
       <option value="">All categories</option>
-      {#each categories as category}
-        <option value={category.id} selected={categoryFilter === category.id}>{category.name}</option>
+      {#each categories as category (category.id)}
+        <option value={category.id} selected={categoryFilter === category.id}>
+          {category.name}
+        </option>
       {/each}
     </select>
   {/if}
 
   {#if doneCount > 0}
-    <button class="clear-btn" on:click={() => dispatch('clear')}>
+    <button
+      class="font-[var(--sans)] text-[13px] py-1.5 px-3 border-none rounded-md bg-transparent cursor-pointer text-[var(--text)] hover:bg-[rgba(239,68,68,0.1)]"
+      on:click={() => dispatch('clear')}
+    >
       Clear completed
     </button>
   {/if}
 </div>
-
-<style>
-  .filters { display: flex; align-items: center; justify-content: space-between; padding: 0 4px 12px; gap: 8px; flex-wrap: wrap; }
-  .count { font-size: 13px; color: var(--text); }
-  .filter-btns { display: flex; gap: 4px; }
-  .filter-btn { font-family: var(--sans); font-size: 13px; padding: 6px 12px; border: 1px solid transparent; border-radius: 6px; background: transparent; cursor: pointer; transition: all 0.15s; color: var(--text); }
-  .filter-btn:hover { background: var(--code-bg); }
-  .filter-btn.active { border-color: var(--accent); background: var(--accent-bg); font-weight: 500; }
-  .cat-select { font-family: var(--sans); font-size: 13px; padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); cursor: pointer; }
-  .clear-btn { font-family: var(--sans); font-size: 13px; padding: 6px 12px; border: none; border-radius: 6px; background: transparent; cursor: pointer; color: var(--text); }
-  .clear-btn:hover { background: rgba(239, 68, 68, 0.1); }
-</style>

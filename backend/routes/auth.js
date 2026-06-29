@@ -67,10 +67,7 @@ router.post('/login', async (request, response) => {
 
 router.post('/logout', async (request, response) => {
   try {
-    const sessionId = request.headers.cookie?.split(';')
-      .find(c => c.trim().startsWith('session_id='))
-      ?.split('=')[1]
-      ?.trim();
+    const sessionId = Session.extractId(request);
 
     if (sessionId) {
       await Session.remove(sessionId);

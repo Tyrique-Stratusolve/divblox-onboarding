@@ -4,6 +4,13 @@ import { findById } from './user.js';
 
 const SESSION_DURATION_HOURS = 24;
 
+export function extractId(request) {
+  return request.headers.cookie?.split(';')
+    .find(c => c.trim().startsWith('session_id='))
+    ?.split('=')[1]
+    ?.trim() || null;
+}
+
 export function generateId() {
   return crypto.randomBytes(48).toString('hex');
 }
