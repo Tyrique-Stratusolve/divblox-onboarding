@@ -1,11 +1,21 @@
 const BASE = '/api';
 
+function onSessionExpired() {
+  localStorage.removeItem('divblox-user');
+  window.location.hash = '#/login';
+}
+
 async function request(endpoint, options = {}) {
   const response = await fetch(`${BASE}${endpoint}`, {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
+
+  if (response.status === 401) {
+    onSessionExpired();
+    throw new Error('Session expired');
+  }
 
   if (response.status === 204) return null;
 
