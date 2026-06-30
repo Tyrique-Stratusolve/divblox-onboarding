@@ -8,7 +8,7 @@ function onSessionExpired() {
 }
 
 async function request(endpoint, options = {}) {
-  const { silent, successMessage, ...fetchOptions } = options;
+  const { silent, ...fetchOptions } = options;
 
   const response = await fetch(`${BASE}${endpoint}`, {
     credentials: 'include',
@@ -32,11 +32,15 @@ async function request(endpoint, options = {}) {
     return undefined;
   }
 
-  if (successMessage) {
-    toast.success(successMessage);
+  if (data.message) {
+    toast.success(data.message);
   }
 
-  return data;
+  if (Array.isArray(data)) return data;
+
+  const { message, ...entity } = data;
+  const keys = Object.keys(entity);
+  return keys.length === 1 ? entity[keys[0]] : entity;
 }
 
 export function signup(firstName, lastName, username, password) {
@@ -70,7 +74,6 @@ export function createTask(title, description, categoryId) {
   return request('/tasks', {
     method: 'POST',
     body: JSON.stringify({ title, description, category_id: categoryId || null }),
-    successMessage: 'Task created',
   });
 }
 
@@ -78,12 +81,11 @@ export function updateTask(id, fields) {
   return request(`/tasks/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(fields),
-    successMessage: 'Task updated',
   });
 }
 
 export function deleteTask(id) {
-  return request(`/tasks/${id}`, { method: 'DELETE', successMessage: 'Task deleted' });
+  return request(`/tasks/${id}`, { method: 'DELETE' });
 }
 
 export function fetchCategories() {
@@ -94,7 +96,6 @@ export function createCategory(name, color) {
   return request('/categories', {
     method: 'POST',
     body: JSON.stringify({ name, color }),
-    successMessage: 'Category created',
   });
 }
 
@@ -102,10 +103,9 @@ export function updateCategory(id, name, color) {
   return request(`/categories/${id}`, {
     method: 'PATCH',
     body: JSON.stringify({ name, color }),
-    successMessage: 'Category updated',
   });
 }
 
 export function deleteCategory(id) {
-  return request(`/categories/${id}`, { method: 'DELETE', successMessage: 'Category deleted' });
+  return request(`/categories/${id}`, { method: 'DELETE' });
 }

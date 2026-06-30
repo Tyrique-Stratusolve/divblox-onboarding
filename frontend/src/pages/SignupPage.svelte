@@ -19,8 +19,8 @@
     loading = true;
     const result = await signup(firstName, lastName, username, password);
     if (result) {
-      currentUser.set(result.user);
-      localStorage.setItem('divblox-user', JSON.stringify(result.user));
+      currentUser.set(result);
+      localStorage.setItem('divblox-user', JSON.stringify(result));
       push('/todos');
     }
     loading = false;
