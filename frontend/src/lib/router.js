@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 function currentHash() {
-  return window.location.hash.slice(1) || '/todos';
+  return window.location.hash.slice(1);
 }
 
 export const route = writable(currentHash());

@@ -65,6 +65,23 @@ router.post('/login', async (request, response) => {
   }
 });
 
+router.get('/me', requireAuth, async (request, response) => {
+  try {
+    const user = await User.findById(request.userId);
+    const roles = await User.getRoles(request.userId);
+    response.json({
+      id: user.id,
+      firstName: user.FirstName,
+      lastName: user.LastName,
+      username: user.username,
+      roles: roles.map(r => r.name),
+    });
+  } catch (error) {
+    console.error('Get me error:', error);
+    response.status(500).json({ error: 'Failed to fetch user' });
+  }
+});
+
 router.post('/logout', async (request, response) => {
   try {
     const sessionId = Session.extractId(request);

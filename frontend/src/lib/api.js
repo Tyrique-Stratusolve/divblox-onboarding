@@ -46,6 +46,10 @@ export function logout() {
   return request('/auth/logout', { method: 'POST' });
 }
 
+export function fetchMe() {
+  return request('/auth/me');
+}
+
 export function fetchTasks(categoryId = null) {
   const query = categoryId ? `?category_id=${categoryId}` : '';
   return request(`/tasks${query}`);

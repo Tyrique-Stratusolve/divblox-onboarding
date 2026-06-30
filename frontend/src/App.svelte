@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { Toaster } from 'svelte-sonner';
   import { route, navigate } from './lib/router.js';
-  import { logout } from './lib/api.js';
+  import { logout, fetchMe } from './lib/api.js';
   import LoginPage from './pages/LoginPage.svelte';
   import SignupPage from './pages/SignupPage.svelte';
   import TodosPage from './pages/TodosPage.svelte';
@@ -10,28 +10,38 @@
 
   export let user = null;
   export let isAdmin = false;
-  export let userName = '';
+  export let fullName = '';
 
-  onMount(() => {
-    const saved = localStorage.getItem('divblox-user');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      user = parsed;
-      isAdmin = parsed.roles?.includes('admin');
-      userName = `${parsed.firstName} ${parsed.lastName}`;
+  let authenticated = false;
+
+  onMount(async () => {
+    try {
+      const u = await fetchMe();
+      user = u;
+      isAdmin = u.roles?.includes('admin');
+      fullName = `${u.firstName} ${u.lastName}`;
+      localStorage.setItem('divblox-user', JSON.stringify(u));
       if ($route === '/login' || $route === '/signup') {
         navigate('/todos');
       }
-    } else if ($route !== '/login' && $route !== '/signup') {
-      navigate('/login');
+    } catch {
+      localStorage.removeItem('divblox-user');
+      if ($route !== '/login' && $route !== '/signup') {
+        navigate('/login');
+      }
     }
+    authenticated = true;
   });
+
+  $: if (authenticated && routeValue !== '/login' && routeValue !== '/signup' && !user) {
+    navigate('/login');
+  }
 
   function onLogin(event) {
     const { user: u } = event.detail;
     user = u;
     isAdmin = u.roles?.includes('admin');
-    userName = `${u.firstName} ${u.lastName}`;
+    fullName = `${u.firstName} ${u.lastName}`;
     localStorage.setItem('divblox-user', JSON.stringify(u));
     navigate('/todos');
   }
@@ -40,7 +50,7 @@
     const { user: u } = event.detail;
     user = u;
     isAdmin = u.roles?.includes('admin');
-    userName = `${u.firstName} ${u.lastName}`;
+    fullName = `${u.firstName} ${u.lastName}`;
     localStorage.setItem('divblox-user', JSON.stringify(u));
     navigate('/todos');
   }
@@ -49,7 +59,7 @@
     try { await logout(); } catch (e) { /* ignore */ }
     user = null;
     isAdmin = false;
-    userName = '';
+    fullName = '';
     localStorage.removeItem('divblox-user');
     navigate('/login');
   }
@@ -57,16 +67,7 @@
   $: routeValue = $route;
 </script>
 
-<Toaster position="bottom-right" />
-
-{#if !user && routeValue !== '/login' && routeValue !== '/signup'}
-  <div class="todo-app">
-    <header class="app-header">
-      <h1>divblox - todo</h1>
-      <p class="subtitle">task manager</p>
-    </header>
-    <p class="loading-text">Loading...</p>
-  </div>
+{#if !authenticated}
 {:else if routeValue === '/login'}
   <LoginPage on:login={onLogin} />
 {:else if routeValue === '/signup'}
@@ -77,7 +78,7 @@
       <h1>divblox - todo</h1>
       <p class="subtitle">task manager</p>
       <div class="user-bar">
-        <span>{userName}</span>
+        <span>{fullName}</span>
         {#if isAdmin}
           <button class="link-btn" on:click={() => navigate(routeValue === '/categories' ? '/todos' : '/categories')}>
             {routeValue === '/categories' ? 'Back to tasks' : 'Manage categories'}
@@ -94,6 +95,8 @@
     {/if}
   </div>
 {/if}
+
+<Toaster position="bottom-right" />
 
 <style>
   .user-bar { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 8px; font-size: 13px; }
