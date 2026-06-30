@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import { fetchTasks, createTask, updateTask, deleteTask, fetchCategories } from '../lib/api.js';
-  import { withErrorToast } from '../lib/utils.js';
   import TodoForm from '../components/TodoForm.svelte';
   import TodoList from '../components/TodoList.svelte';
   import TodoFilters from '../components/TodoFilters.svelte';
@@ -23,33 +22,24 @@
     return task.category?.id === categoryFilter;
   });
 
-  $: activeCount = tasks.filter(t => !t.done).length;
-  $: doneCount = tasks.filter(t => t.done).length;
+  $: activeCount = tasks.filter(task => !task.done).length;
+  $: doneCount = tasks.filter(task => task.done).length;
 
   async function loadData() {
     loading = true;
-    const result = await withErrorToast(
-      Promise.all([fetchTasks(), fetchCategories()]),
-      'Failed to load data'
-    );
+    const result = await Promise.all([fetchTasks(), fetchCategories()]);
     if (result) { [tasks, categories] = result; }
     loading = false;
   }
 
   async function handleAddTask(event) {
-    const task = await withErrorToast(
-      createTask(event.detail.title, event.detail.description, event.detail.category_id),
-      'Failed to create task'
-    );
+    const task = await createTask(event.detail.title, event.detail.description, event.detail.category_id);
     if (task) tasks = [task, ...tasks];
   }
 
   async function handleToggleTask(event) {
-    const updated = await withErrorToast(
-      updateTask(event.detail.id, { done: !event.detail.done }),
-      'Failed to update task'
-    );
-    if (updated) tasks = tasks.map(t => t.id === updated.id ? updated : t);
+    const updated = await updateTask(event.detail.id, { done: !event.detail.done });
+    if (updated) tasks = tasks.map(task => task.id === updated.id ? updated : task);
   }
 
   async function handleEditTask(event) {
@@ -57,26 +47,20 @@
     if (event.detail.title !== undefined) fields.title = event.detail.title;
     if (event.detail.description !== undefined) fields.description = event.detail.description;
     if (event.detail.category_id !== undefined) fields.category_id = event.detail.category_id;
-    const updated = await withErrorToast(
-      updateTask(event.detail.id, fields),
-      'Failed to update task'
-    );
-    if (updated) tasks = tasks.map(t => t.id === updated.id ? updated : t);
+    const updated = await updateTask(event.detail.id, fields);
+    if (updated) tasks = tasks.map(task => task.id === updated.id ? updated : task);
   }
 
   async function handleDeleteTask(event) {
-    await withErrorToast(deleteTask(event.detail.id), 'Failed to delete task');
-    tasks = tasks.filter(t => t.id !== event.detail.id);
+    await deleteTask(event.detail.id);
+    tasks = tasks.filter(task => task.id !== event.detail.id);
   }
 
   async function handleClearCompleted() {
-    const completed = tasks.filter(t => t.done);
+    const completed = tasks.filter(task => task.done);
     if (completed.length === 0) return;
-    await withErrorToast(
-      Promise.all(completed.map(t => deleteTask(t.id))),
-      'Failed to clear completed tasks'
-    );
-    tasks = tasks.filter(t => !t.done);
+    await Promise.all(completed.map(task => deleteTask(task.id)));
+    tasks = tasks.filter(task => !task.done);
   }
 </script>
 

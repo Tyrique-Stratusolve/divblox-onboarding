@@ -1,3 +1,5 @@
+import { toast } from 'svelte-sonner';
+
 const BASE = '/api';
 
 function onSessionExpired() {
@@ -6,15 +8,17 @@ function onSessionExpired() {
 }
 
 async function request(endpoint, options = {}) {
+  const { silent, ...fetchOptions } = options;
+
   const response = await fetch(`${BASE}${endpoint}`, {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
-    ...options,
+    ...fetchOptions,
   });
 
   if (response.status === 401) {
     onSessionExpired();
-    throw new Error('Session expired');
+    return undefined;
   }
 
   if (response.status === 204) return null;
@@ -22,7 +26,10 @@ async function request(endpoint, options = {}) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || 'Request failed');
+    if (!silent) {
+      toast.error(data.error || 'Request failed');
+    }
+    return undefined;
   }
 
   return data;
@@ -47,7 +54,7 @@ export function logout() {
 }
 
 export function fetchMe() {
-  return request('/auth/me');
+  return request('/auth/me', { silent: true });
 }
 
 export function fetchTasks(categoryId = null) {

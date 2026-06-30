@@ -1,10 +1,7 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { push } from 'svelte-spa-router';
   import { login } from '../lib/api.js';
-  import { toast } from 'svelte-sonner';
-  import { navigate } from '../lib/router.js';
-
-  const dispatch = createEventDispatcher();
+  import { currentUser } from '../lib/stores.js';
 
   let username = '';
   let password = '';
@@ -13,59 +10,59 @@
   async function handleSubmit() {
     if (!username || !password) return;
     loading = true;
-    try {
-      const result = await login(username, password);
-      dispatch('login', result);
-    } catch (error) {
-      toast.error(error.message || 'Login failed');
+    const result = await login(username, password);
+    if (result) {
+      currentUser.set(result.user);
+      localStorage.setItem('divblox-user', JSON.stringify(result.user));
+      push('/todos');
     }
     loading = false;
   }
 </script>
 
-<div class="todo-app">
-  <header class="app-header text-center mb-7">
+<div class="w-full max-w-[560px] mx-auto text-left">
+  <header class="text-center mb-7">
     <h1>divblox - todo</h1>
-    <p class="subtitle">task manager</p>
+    <p class="text-[13px] uppercase tracking-[2px] text-[#94a3b8]">task manager</p>
   </header>
 
-  <form class="auth-form" on:submit|preventDefault={handleSubmit}>
-    <h2>Sign in</h2>
+  <form
+    class="max-w-[360px] mx-auto mt-[60px] flex flex-col gap-3"
+    on:submit|preventDefault={handleSubmit}
+  >
+    <h2 class="text-center">Sign in</h2>
 
     <input
       type="text"
       placeholder="Username"
       bind:value={username}
       disabled={loading}
-      class="w-full px-3.5 py-2.5 border border-[var(--border)] rounded-lg text-[15px] font-[var(--sans)]"
+      class="w-full px-3.5 py-2.5 border border-(--border) rounded-lg text-[15px] font-(--sans) outline-none focus:border-(--accent) focus:shadow-[0_0_0_3px_var(--accent-bg)]"
     />
     <input
       type="password"
       placeholder="Password"
       bind:value={password}
       disabled={loading}
-      class="w-full px-3.5 py-2.5 border border-[var(--border)] rounded-lg text-[15px] font-[var(--sans)]"
+      class="w-full px-3.5 py-2.5 border border-(--border) rounded-lg text-[15px] font-(--sans) outline-none focus:border-(--accent) focus:shadow-[0_0_0_3px_var(--accent-bg)]"
     />
     <button
       type="submit"
       disabled={loading || !username || !password}
-      class="w-full py-2.5 bg-[var(--accent)] text-white border-none rounded-lg text-[15px] font-[var(--sans)] cursor-pointer disabled:opacity-40"
+      class="w-full py-2.5 bg-(--accent) text-white border-none rounded-lg text-[15px] font-(--sans) cursor-pointer disabled:opacity-40"
     >
       {loading ? 'Signing in...' : 'Sign in'}
     </button>
 
     <p class="text-center text-sm">
       No account?
-      <button type="button" class="link-btn" on:click={() => navigate('/signup')}>Sign up</button>
+      <button
+        type="button"
+        class="bg-transparent border-none text-(--accent) cursor-pointer underline p-0 text-[14px]"
+        on:click={() => push('/signup')}
+      >
+        Sign up
+      </button>
     </p>
   </form>
 </div>
-
-<style>
-  .auth-form { max-width: 360px; margin: 60px auto; display: flex; flex-direction: column; gap: 12px; }
-  .auth-form h2 { text-align: center; }
-  .link-btn { background: none; border: none; color: var(--accent); cursor: pointer; font: inherit; padding: 0; text-decoration: underline; }
-  .text-center { text-align: center; }
-  .mb-7 { margin-bottom: 28px; }
-  .text-sm { font-size: 14px; }
-</style>

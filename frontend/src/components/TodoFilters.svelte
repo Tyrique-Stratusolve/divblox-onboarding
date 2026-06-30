@@ -17,17 +17,17 @@
 </script>
 
 <div class="flex items-center justify-between px-1 pb-3 gap-2 flex-wrap">
-  <span class="text-[13px] text-[var(--text)]">
+  <span class="text-[13px] text-(--text)">
     {activeCount} {activeCount === 1 ? 'item' : 'items'} left
   </span>
 
   <div class="flex gap-1">
     {#each filterOptions as option}
       <button
-        class="font-[var(--sans)] text-[13px] py-1.5 px-3 border rounded-md bg-transparent cursor-pointer transition-all text-[var(--text)] hover:bg-[var(--code-bg)]"
+        class="font-(--sans) text-[13px] py-1.5 px-3 border rounded-md bg-transparent cursor-pointer transition-all text-(--text) hover:bg-(--code-bg)"
         class:border-transparent={filter !== option.key}
-        class:border-[var(--accent)]={filter === option.key}
-        class:bg-[var(--accent-bg)]={filter === option.key}
+        class:border-(--accent)={filter === option.key}
+        class:bg-(--accent-bg)={filter === option.key}
         class:font-medium={filter === option.key}
         on:click={() => dispatch('change', option.key)}
       >
@@ -39,7 +39,7 @@
   {#if categories.length > 0}
     <select
       on:change={event => dispatch('categoryFilter', event.target.value ? Number(event.target.value) : null)}
-      class="font-[var(--sans)] text-[13px] py-1.5 px-2.5 border border-[var(--border)] rounded-md bg-[var(--bg)] text-[var(--text)] cursor-pointer"
+      class="font-(--sans) text-[13px] py-1.5 px-2.5 border border-(--border) rounded-md bg-(--bg) text-(--text) cursor-pointer"
     >
       <option value="">All categories</option>
       {#each categories as category (category.id)}
@@ -52,7 +52,7 @@
 
   {#if doneCount > 0}
     <button
-      class="font-[var(--sans)] text-[13px] py-1.5 px-3 border-none rounded-md bg-transparent cursor-pointer text-[var(--text)] hover:bg-[rgba(239,68,68,0.1)]"
+      class="font-(--sans) text-[13px] py-1.5 px-3 border-none rounded-md bg-transparent cursor-pointer text-(--text) hover:bg-[rgba(239,68,68,0.1)]"
       on:click={() => dispatch('clear')}
     >
       Clear completed

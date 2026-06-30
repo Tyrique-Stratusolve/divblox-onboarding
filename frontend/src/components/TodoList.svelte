@@ -12,7 +12,7 @@
     {/each}
   </div>
 {:else}
-  <div class="text-center py-8 text-sm text-[var(--text)]">
+  <div class="text-center py-8 text-sm text-(--text)">
     <p>No tasks match this filter.</p>
   </div>
 {/if}
