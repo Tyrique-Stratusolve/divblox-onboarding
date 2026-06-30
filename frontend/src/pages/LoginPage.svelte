@@ -1,10 +1,10 @@
 <script>
-  import { push } from 'svelte-spa-router';
-  import { login } from '../lib/api.js';
-  import { currentUser } from '../lib/stores.js';
+  import { push } from "svelte-spa-router";
+  import { login } from "../lib/api.js";
+  import { currentUser } from "../lib/stores.js";
 
-  let username = '';
-  let password = '';
+  let username = "";
+  let password = "";
   let loading = false;
 
   async function handleSubmit() {
@@ -13,21 +13,23 @@
     const result = await login(username, password);
     if (result) {
       currentUser.set(result.user);
-      localStorage.setItem('divblox-user', JSON.stringify(result.user));
-      push('/todos');
+      localStorage.setItem("divblox-user", JSON.stringify(result.user));
+      push("/todos");
     }
     loading = false;
   }
 </script>
 
-<div class="w-full max-w-[560px] mx-auto text-left">
+<div class="w-full max-w-140` mx-auto text-left">
   <header class="text-center mb-7">
     <h1>divblox - todo</h1>
-    <p class="text-[13px] uppercase tracking-[2px] text-[#94a3b8]">task manager</p>
+    <p class="text-[13px] uppercase tracking-[2px] text-[#94a3b8]">
+      task manager
+    </p>
   </header>
 
   <form
-    class="max-w-[360px] mx-auto mt-[60px] flex flex-col gap-3"
+    class="max-w-90 mx-auto mt-15 flex flex-col gap-3"
     on:submit|preventDefault={handleSubmit}
   >
     <h2 class="text-center">Sign in</h2>
@@ -51,7 +53,7 @@
       disabled={loading || !username || !password}
       class="w-full py-2.5 bg-(--accent) text-white border-none rounded-lg text-[15px] font-(--sans) cursor-pointer disabled:opacity-40"
     >
-      {loading ? 'Signing in...' : 'Sign in'}
+      {loading ? "Signing in..." : "Sign in"}
     </button>
 
     <p class="text-center text-sm">
@@ -59,7 +61,7 @@
       <button
         type="button"
         class="bg-transparent border-none text-(--accent) cursor-pointer underline p-0 text-[14px]"
-        on:click={() => push('/signup')}
+        on:click={() => push("/signup")}
       >
         Sign up
       </button>
