@@ -8,7 +8,7 @@ function onSessionExpired() {
 }
 
 async function request(endpoint, options = {}) {
-  const { silent, ...fetchOptions } = options;
+  const { silent, successMessage, ...fetchOptions } = options;
 
   const response = await fetch(`${BASE}${endpoint}`, {
     credentials: 'include',
@@ -30,6 +30,10 @@ async function request(endpoint, options = {}) {
       toast.error(data.error || 'Request failed');
     }
     return undefined;
+  }
+
+  if (successMessage) {
+    toast.success(successMessage);
   }
 
   return data;
@@ -66,6 +70,7 @@ export function createTask(title, description, categoryId) {
   return request('/tasks', {
     method: 'POST',
     body: JSON.stringify({ title, description, category_id: categoryId || null }),
+    successMessage: 'Task created',
   });
 }
 
@@ -73,11 +78,12 @@ export function updateTask(id, fields) {
   return request(`/tasks/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(fields),
+    successMessage: 'Task updated',
   });
 }
 
 export function deleteTask(id) {
-  return request(`/tasks/${id}`, { method: 'DELETE' });
+  return request(`/tasks/${id}`, { method: 'DELETE', successMessage: 'Task deleted' });
 }
 
 export function fetchCategories() {
@@ -88,6 +94,7 @@ export function createCategory(name, color) {
   return request('/categories', {
     method: 'POST',
     body: JSON.stringify({ name, color }),
+    successMessage: 'Category created',
   });
 }
 
@@ -95,9 +102,10 @@ export function updateCategory(id, name, color) {
   return request(`/categories/${id}`, {
     method: 'PATCH',
     body: JSON.stringify({ name, color }),
+    successMessage: 'Category updated',
   });
 }
 
 export function deleteCategory(id) {
-  return request(`/categories/${id}`, { method: 'DELETE' });
+  return request(`/categories/${id}`, { method: 'DELETE', successMessage: 'Category deleted' });
 }

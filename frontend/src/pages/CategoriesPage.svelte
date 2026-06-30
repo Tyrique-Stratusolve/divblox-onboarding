@@ -38,7 +38,7 @@
     if (!editName.trim()) return;
     const cat = await updateCategory(editingId, editName, editColor);
     if (cat) {
-      categories = categories.map(c => c.id === cat.id ? cat : c);
+      categories = categories.map(category => category.id === cat.id ? cat : category);
       editingId = null;
     }
   }
@@ -46,7 +46,7 @@
   async function handleDelete(categoryId) {
     if (!confirm('Delete this category?')) return;
     await deleteCategory(categoryId);
-    categories = categories.filter(c => c.id !== categoryId);
+    categories = categories.filter(category => category.id !== categoryId);
   }
 </script>
 
