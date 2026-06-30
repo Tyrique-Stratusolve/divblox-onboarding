@@ -91,7 +91,7 @@
             </button>
           {:else}
             <span
-              class="inline-flex items-center gap-1 text-[11px] py-0.75 px-2.5 rounded-[10px] max-w-[150px] text-white"
+              class="inline-flex items-center gap-1 text-[11px] py-0.75 px-2.5 rounded-[10px] max-w-37.5 text-white"
               style="background-color: {category.color}80"
             >
               <span class="overflow-hidden text-ellipsis whitespace-nowrap">{category.name}</span>
